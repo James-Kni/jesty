@@ -26,6 +26,7 @@ pub fn pick_files() -> Result<Vec<String>> {
 
     let options = SkimOptionsBuilder::default()
         .multi(true)
+        .bind(vec!["ctrl-a:select-all".to_string()])
         .preview(Some(
             "bat --color=always --style=numbers {} 2>/dev/null || cat {}".into(),
         ))
