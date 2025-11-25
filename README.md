@@ -3,6 +3,8 @@
 A fast, interactive CLI tool for selecting and running [Jest](https://jestjs.io/) tests in your project.
 Pick test files with fuzzy search, pass any Jest flags, and easily rerun your last test run.
 
+<img width="1244" height="850" alt="image" src="https://github.com/user-attachments/assets/5d2ddbd7-d936-4d95-a701-89961f78ab0a" />
+
 ## Features
 
 - **Fuzzy-pick** Jest test files interactively
