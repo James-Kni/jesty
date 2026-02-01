@@ -37,11 +37,16 @@ pub fn pick_files() -> Result<Vec<String>> {
     let item_reader = SkimItemReader::default();
     let items = item_reader.of_bufread(Cursor::new(files.join("\n")));
 
-    let selected = Skim::run_with(&options, Some(items))
-        .filter(|out| !out.is_abort)
-        .map(|out| out.selected_items);
+    let output = Skim::run_with(options, Some(items))
+        .map_err(|e| anyhow::anyhow!("{e}"))?;
 
-    selected
-        .map(|items| items.iter().map(|i| i.output().to_string()).collect())
-        .context("no files selected")
+    if output.is_abort {
+        anyhow::bail!("no files selected");
+    }
+
+    Ok(output
+        .selected_items
+        .iter()
+        .map(|i| i.item.output().to_string())
+        .collect())
 }
