@@ -3,56 +3,51 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      release_tag:
-        description: 'The version to release (uses Cargo.toml if empty)'
-        default: ''
-        type: string
-
-      release_ref:
-        description: 'The branch, tag or SHA to checkout (default to latest)'
-        default: ''
-        type: string
-
-permissions:
-  contents: write
+      tag:
+        description: 'Tag name (e.g., v1.0.0)'
+        required: true
+      prerelease:
+        description: 'Is this a prerelease?'
+        type: boolean
+        default: false
 
 jobs:
-  create-release:
-    name: Create jesty release
-    runs-on: ubuntu-latest
-
-    outputs:
-      upload_url: ${{ steps.create.outputs.upload_url }}
-      build_matrix: ${{ steps.create.outputs.build_matrix }}
-
-    steps:
-      - name: Create jesty release
-        id: create
-        uses: seaofvoices/rust-release-action@v1
-        with:
-          release_tag: ${{ inputs.release_tag }}
-          release_ref: ${{ inputs.release_ref }}
-          publish_crate: false
-
-  build-artifacts:
-    needs: create-release
-
+  release:
     strategy:
-      fail-fast: false
       matrix:
-        include: ${{ fromJson(needs.create-release.outputs.build_matrix) }}
+        platform:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - os: macos-latest
+            target: x86_64-apple-darwin
 
-    name: Build (${{ matrix.artifact-name }})
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.platform.os }}
+    permissions:
+      contents: write
 
     steps:
-      - name: Build artifact
-        id: create_release
-        uses: seaofvoices/rust-build-artifact-action@v1
+      - uses: actions/checkout@v4
+
+      - name: Build
+        uses: houseabsolute/actions-rust-cross@v0
         with:
-          release_ref: ${{ inputs.release_ref }}
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          package_name: ${{ matrix.name }}
-          artifact_name: ${{ matrix.artifact_name }}
-          cargo_target: ${{ matrix.name }}
-          linker: ${{ matrix.linker }}
+          target: ${{ matrix.platform.target }}
+          args: "--locked --release"
+          strip: true
+
+      - name: Create Tag (once)
+        if: matrix.platform.target == 'x86_64-unknown-linux-gnu'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag ${{ github.event.inputs.tag }} || true
+          git push origin ${{ github.event.inputs.tag }} || true
+
+      - name: Release
+        uses: houseabsolute/actions-rust-release@v0
+        with:
+          executable-name: jesty
+          target: ${{ matrix.platform.target }}
+          changes-file: ""
