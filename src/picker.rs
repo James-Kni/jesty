@@ -1,5 +1,5 @@
-use ignore::Walk;
 use anyhow::{Context, Result};
+use ignore::Walk;
 use skim::prelude::*;
 use std::io::Cursor;
 
@@ -11,7 +11,9 @@ pub fn pick_files() -> Result<Vec<String>> {
             let fname = path.file_name()?.to_str()?;
             let ext = path.extension()?.to_str()?;
 
-            if fname.contains(".test.") && matches!(ext, "js" | "jsx" | "ts" | "tsx") {
+            if (fname.contains(".test.") || fname.contains(".spec."))
+                && matches!(ext, "js" | "jsx" | "ts" | "tsx")
+            {
                 let s = path.display().to_string();
                 Some(s.strip_prefix("./").unwrap_or(&s).to_string())
             } else {
@@ -37,8 +39,7 @@ pub fn pick_files() -> Result<Vec<String>> {
     let item_reader = SkimItemReader::default();
     let items = item_reader.of_bufread(Cursor::new(files.join("\n")));
 
-    let output = Skim::run_with(options, Some(items))
-        .map_err(|e| anyhow::anyhow!("{e}"))?;
+    let output = Skim::run_with(options, Some(items)).map_err(|e| anyhow::anyhow!("{e}"))?;
 
     if output.is_abort {
         anyhow::bail!("no files selected");
