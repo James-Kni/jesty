@@ -6,11 +6,11 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.100"
-clap = { version = "4.5.53", features = ["derive"] }
+clap = { version = "4.5.56", features = ["derive"] }
 dirs = "6.0.0"
 ignore = "0.4.25"
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.145"
+serde_json = "1.0.149"
 skim = { version = "=2.0.0", default-features = false }
 
 # The profile that 'dist' will build with
