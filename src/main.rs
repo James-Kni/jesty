@@ -8,7 +8,7 @@ use clap::{Parser, Subcommand};
 use crate::{cache::load_cache, picker::pick_files, runner::run_jest};
 
 #[derive(Parser)]
-#[command(trailing_var_arg = true, allow_hyphen_values = true)]
+#[command(version, trailing_var_arg = true, allow_hyphen_values = true)]
 struct Args {
     #[command(subcommand)]
     command: Option<Commands>,
