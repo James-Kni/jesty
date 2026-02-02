@@ -1,0 +1,9 @@
+[workspace]
+allow_dirty = true
+changelog_update = true
+dependencies_update = true
+git_release_enable = true
+publish = false
+
+[[package]]
+name = "jesty"
