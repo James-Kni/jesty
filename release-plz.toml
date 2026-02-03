@@ -2,7 +2,7 @@
 allow_dirty = true
 changelog_update = true
 dependencies_update = true
-git_release_enable = true
+git_release_enable = false
 publish = false
 
 [[package]]
