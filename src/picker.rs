@@ -31,6 +31,7 @@ pub fn pick_files() -> Result<Vec<String>> {
         .bind(vec!["ctrl-a:select-all".to_string()])
         .preview("bat --color=always --style=numbers {} 2>/dev/null || cat {}".to_string())
         .prompt("jesty> ".to_string())
+        .algorithm(FuzzyAlgorithm::Frizbee)
         .build()
         .context("failed to build skim options")?;
 
