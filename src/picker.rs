@@ -11,7 +11,7 @@ pub fn pick_files() -> Result<Vec<String>> {
             let fname = path.file_name()?.to_str()?;
             let ext = path.extension()?.to_str()?;
 
-            if (fname.contains(".test.") || fname.contains(".spec."))
+            if (fname.contains(".test."))
                 && matches!(ext, "js" | "jsx" | "ts" | "tsx")
             {
                 let s = path.display().to_string();
