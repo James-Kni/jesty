@@ -15,9 +15,7 @@ Pick test files with fuzzy search, pass any Jest flags, and rerun your last test
 
 ### Prebuilt binary
 
-Download from the [Releases](https://github.com/James-Kni/jesty/releases) tab, then either:
-- put it somewhere in your `PATH`
-- run it from wherever you want!
+Download from the [Releases](https://github.com/James-Kni/jesty/releases) tab, then either put it somewhere in your `PATH` or run from wherever floats your boat!
 
 ### Build from source
 
